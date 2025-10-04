@@ -43,7 +43,7 @@ for i in range(NUM_ITERATIONS):
 
     try:
         subprocess.run(["python", "generate_input.py"], check=True)
-        subprocess.run(["main.exe"], check=True)
+        subprocess.run(["QuickSortAlgorithm.exe"], check=True)
         subprocess.run(["python", "check_output.py"], check=True)
         success_count += 1
     except subprocess.CalledProcessError:
