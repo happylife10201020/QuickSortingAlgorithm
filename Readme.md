@@ -1,4 +1,4 @@
-[#  Assignment02 - Quick Sorting Algorithm
+#  Assignment02 - Quick Sorting Algorithm
 
 > 2025-2학기 알고리즘 과제 02
 > 
