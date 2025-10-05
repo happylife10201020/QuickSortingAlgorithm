@@ -1,6 +1,7 @@
 //
 // Created by Lee on 25. 10. 4.
 //
+// https://github.com/happylife10201020/QuickSortingAlgorithm
 
 #include <iostream>
 #include <fstream>
@@ -15,75 +16,75 @@ class SortArray {
 public:
     vector<int> Array;
     string inputFileName, outputFileName;
-    vector<int> coppyArray1, coppyArray2, coppyArray3;
+    ifstream inputFile;
+    ofstream outputFile;
+    vector<int> copyArray1, copyArray2, copyArray3;
     int length ;
 
-    void getData(const string &filename) ;
+    SortArray(const string &inputFileName, const string &outputFileName); ;
+    void getData() ;
 
     void QuickSort(int low, int high) ;
     void RandomQuickSort(int low, int high) ;
     void ThreeQuickSort(int low, int high) ;
 
-    void PrintArray(const vector<int> &array) ;
+    ~SortArray() ;
 };
 
-int main() {
-    srand(time(NULL)) ;
+SortArray::SortArray(const string &inputFileName, const string &outputFileName) {
+    this->inputFileName = inputFileName;
+    this->outputFileName = outputFileName;
 
-    SortArray array;
-    array.inputFileName = "input.txt";
-    array.outputFileName = "output.txt";
-
-    array.getData(array.inputFileName);
-    array.QuickSort(0, array.length - 1);
-    array.RandomQuickSort(0, array.length - 1);
-    array.ThreeQuickSort(0, array.length - 1);
-
-    array.PrintArray(array.coppyArray1);
-    array.PrintArray(array.coppyArray2);
-    array.PrintArray(array.coppyArray3);
-}
-
-void SortArray::getData(const string &filename) {
-    ifstream inputFile;
-    inputFile.open(filename);
+    inputFile.open(inputFileName);
+    outputFile.open(outputFileName);
 
     if (!inputFile.is_open()) {
-        cerr << "Error opening file " << filename << endl;
+        cerr << "Error opening input file: " << inputFileName << endl;
+        exit(1);
+    }
+    if (!outputFile.is_open()) {
+        cerr << "Error opening output file: " << outputFileName << endl;
+        inputFile.close();
         exit(1);
     }
 
+    getData();
+    QuickSort(0, length - 1);
+    RandomQuickSort(0, length - 1);
+    ThreeQuickSort(0, length - 1);
+}
+
+
+void SortArray::getData() {
     inputFile >> length ;
     for (int i = 0; i < length; i++) {
         int data ;
         if (inputFile >> data) {
             Array.push_back(data) ;
         } else {
-            cout << "Error reading data from file " << filename << endl;
+            cout << "Error reading data from file " << inputFileName << endl;
             cout << "NOT ENOUGH NUMBERS" << endl;
             exit(1);
         }
     }
-    coppyArray1 = Array ;
-    coppyArray2 = Array ;
-    coppyArray3 = Array ;
-
-    inputFile.close();
+    copyArray1 = Array ;
+    copyArray2 = Array ;
+    copyArray3 = Array ;
 }
 
 void SortArray::QuickSort(int low, int high) {
     if (low >= high)
         return;
 
-    int pivot = coppyArray1[high] ;
+    int pivot = copyArray1[high] ;
     int i = low - 1 ;
     for (int j = low; j <= high - 1 ; j++) {
-        if (coppyArray1[j] <= pivot) {
+        if (copyArray1[j] <= pivot) {
             i++ ;
-            swap(coppyArray1[j], coppyArray1[i]) ;
+            swap(copyArray1[j], copyArray1[i]) ;
         }
     }
-    swap(coppyArray1[high], coppyArray1[i + 1]) ;
+    swap(copyArray1[high], copyArray1[i + 1]) ;
     QuickSort(low, i);
     QuickSort(i + 2, high) ;
 }
@@ -93,38 +94,76 @@ void SortArray::RandomQuickSort(int low, int high) {
         return;
 
     int random = low + rand() % (high - low + 1) ;
-    int pivot = coppyArray2[random] ;
-    swap(coppyArray2[high], coppyArray2[random]) ;
+    int pivot = copyArray2[random] ;
+    swap(copyArray2[high], copyArray2[random]) ;
     int i = low - 1 ;
     for (int j = low; j <= high - 1 ; j++) {
-        if (coppyArray2[j] <= pivot) {
+        if (copyArray2[j] <= pivot) {
             i++ ;
-            swap(coppyArray2[j], coppyArray2[i]) ;
+            swap(copyArray2[j], copyArray2[i]) ;
         }
     }
-    swap(coppyArray2[high], coppyArray2[i + 1]) ;
+    swap(copyArray2[high], copyArray2[i + 1]) ;
     RandomQuickSort(low, i);
     RandomQuickSort(i + 2, high) ;
 }
 
 void SortArray::ThreeQuickSort(int low, int high) {
+    if (low >= high)
+        return;
 
+    int randArray[3] ;
+    int random ;
+    for (int i = 0; i<3; i++)
+        randArray[i] = low + rand() % (high - low + 1) ;
+
+    for (int i = 0; i<3; i++) {
+        for (int j = i + 1; j<3; j++) {
+            if (copyArray3[randArray[i]] > copyArray3[randArray[j]]) {
+                swap(randArray[i], randArray[j]) ;
+            }
+        }
+    }
+    random = randArray[1] ;
+
+    int pivot = copyArray3[random] ;
+    swap(copyArray3[high], copyArray3[random]) ;
+    int i = low - 1 ;
+    for (int j = low; j <= high - 1 ; j++) {
+        if (copyArray3[j] <= pivot) {
+            i++ ;
+            swap(copyArray3[j], copyArray3[i]) ;
+        }
+    }
+    swap(copyArray3[high], copyArray3[i + 1]) ;
+    ThreeQuickSort(low, i);
+    ThreeQuickSort(i + 2, high) ;
 }
 
-void SortArray::PrintArray(const vector<int> &array) {
-    static ofstream outputFile(outputFileName);
-    if (!outputFile.is_open()) {
-        cout << "ERROR OPENING OUTPUT FILE" << endl;
-        exit(1);
-    }
-    outputFile << array[0] ;
-    for (int i = 1; i < array.size(); i++) {
-        outputFile << " " << array[i] ;
+SortArray::~SortArray() {
+    const vector<int>* arrays[] = {&copyArray1, &copyArray2, &copyArray3};
+    for (int i = 0; i < 3; i++) {
+        const vector<int>& currentArray = *arrays[i];
+
+        outputFile << currentArray[0] ;
+        for (int j = 1; j < currentArray.size(); j++) {
+            outputFile << " " << currentArray[j] ;
+        }
+        if (i < 2) {
+            outputFile << endl ;
+        }
     }
 
-    if (!(array == coppyArray3)) {
-        outputFile << endl ;
-    }else {
-        outputFile.close() ;
-    }
+    inputFile.close() ;
+    outputFile.close() ;
+}
+
+
+
+int main() {
+    srand(time(NULL)) ;
+
+    SortArray array("input.txt", "output.txt");
+
+    return 0 ;
 }

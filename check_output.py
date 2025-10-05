@@ -13,9 +13,9 @@ def read_output(filename="output.txt"):
         if len(lines) < 3:
             raise ValueError("output.txt에 세 가지 정렬 결과가 모두 없습니다.")
         return {
-            "Insertion Sort": list(map(int, lines[0].strip().split())),
-            "Merge Sort": list(map(int, lines[1].strip().split())),
-            "Merge-Insertion Sort": list(map(int, lines[2].strip().split()))
+            "Sort 1": list(map(int, lines[0].strip().split())),
+            "Sort 2": list(map(int, lines[1].strip().split())),
+            "Sort 3": list(map(int, lines[2].strip().split()))
         }
 
 def check_correctness(original, sorted_result, label):
