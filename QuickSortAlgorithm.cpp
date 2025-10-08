@@ -1,6 +1,8 @@
 //
 // Created by Lee on 25. 10. 4.
-//
+// OS : Windows 11
+// IDE : CLion
+// Compiler/build : MinGW
 // https://github.com/happylife10201020/QuickSortingAlgorithm
 
 #include <iostream>
