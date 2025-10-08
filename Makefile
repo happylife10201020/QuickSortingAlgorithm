@@ -6,7 +6,7 @@ compile: QuickSortAlgorithm.cpp
 	g++ QuickSortAlgorithm.cpp -o QuickSortAlgorithm
 
 run: QuickSortAlgorithm
-	./QuickSorotAlgorithm
+	./QuickSortAlgorithm
 
 clean:
 	rm QuickSortAlgorithm
