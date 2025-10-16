@@ -114,32 +114,55 @@ void SortArray::ThreeQuickSort(int low, int high) {
     if (low >= high)
         return;
 
-    int randArray[3] ;
-    int random ;
-    for (int i = 0; i<3; i++)
-        randArray[i] = low + rand() % (high - low + 1) ;
+    int randArray[3];
+    int random;
 
-    for (int i = 0; i<3; i++) {
-        for (int j = i + 1; j<3; j++) {
-            if (copyArray3[randArray[i]] > copyArray3[randArray[j]]) {
-                swap(randArray[i], randArray[j]) ;
+    int range = high - low + 1;
+
+    if (range < 3) {
+        random = low;
+    } else {
+        int count = 0;
+        while (count < 3) {
+            int r = low + rand() % range;
+            bool duplicate = false;
+            for (int i = 0; i < count; i++) {
+                if (randArray[i] == r) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate)
+                randArray[count++] = r;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = i + 1; j < 3; j++) {
+                if (copyArray3[randArray[i]] > copyArray3[randArray[j]]) {
+                    swap(randArray[i], randArray[j]);
+                }
             }
         }
-    }
-    random = randArray[1] ;
 
-    int pivot = copyArray3[random] ;
-    swap(copyArray3[high], copyArray3[random]) ;
-    int i = low - 1 ;
-    for (int j = low; j <= high - 1 ; j++) {
+        random = randArray[1];
+    }
+
+    int pivot = copyArray3[random];
+    swap(copyArray3[random], copyArray3[high]);
+
+    int i = low - 1;
+    for (int j = low; j <= high - 1; j++) {
         if (copyArray3[j] <= pivot) {
-            i++ ;
-            swap(copyArray3[j], copyArray3[i]) ;
+            i++;
+            swap(copyArray3[i], copyArray3[j]);
         }
     }
-    swap(copyArray3[high], copyArray3[i + 1]) ;
-    ThreeQuickSort(low, i);
-    ThreeQuickSort(i + 2, high) ;
+
+    swap(copyArray3[i + 1], copyArray3[high]);
+    int pivotIndex = i + 1;
+
+    ThreeQuickSort(low, pivotIndex - 1);
+    ThreeQuickSort(pivotIndex + 1, high);
 }
 
 SortArray::~SortArray() {
